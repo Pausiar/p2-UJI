@@ -13,14 +13,11 @@ public class KNN implements Algorithm<TableWithLabels, List<Double>, Integer> {
 
     @Override
     public void train(TableWithLabels data) {
-// Guarda la tabla.
         this.data=data;
     }
-    //Arreglado estimate para que no compruebe demás.
 
     @Override
     public Integer estimate(List<Double> sample) {
-// Implementación del algoritmo.
         if(sample.isEmpty()) {
             throw new NoSuchElementException();
         }

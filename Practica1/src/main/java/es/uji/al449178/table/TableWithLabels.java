@@ -2,16 +2,16 @@ package es.uji.al449178.table;
 
 import java.util.HashMap;
 import java.util.Map;
-//terminado
+
 public class TableWithLabels extends Table {
 
     private Map<String, Integer> labelsToIndex;
-    private String HeaderExtra; //Añadido el headerextra como atributo
+    private String HeaderExtra;
     public TableWithLabels() {
         super();
         labelsToIndex = new HashMap<>();
     }
-//Arreglado el uso de un cast Innecesario
+
     public void addRow(RowWithLabel row) {
         super.addRow(row);
         addLabel(row.getLabel());

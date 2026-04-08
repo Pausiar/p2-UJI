@@ -18,12 +18,10 @@ public class RecSys {
         this.algorithm = algorithm;
     }
 
-    //delegamos el entrenamiento al algoritmo (KNN o KMeans)
     public void train(Table trainData) throws InvalidClusterNumberException, IOException {
         algorithm.train(trainData);
     }
 
-    //estimamos el grupo/clase de cada muestra y almacenamos los resultados
     public void initialise(Table testData, List<String> testItemNames) {
         this.itemNames = testItemNames;
         this.estimaciones = new ArrayList<>();
@@ -33,7 +31,6 @@ public class RecSys {
         }
     }
 
-    //buscamos recomendaciones del mismo grupo/clase que el item gustado
     public List<String> recommend(String nameLikedItem, int numRecommendations) throws LikedItemNotFoundException {
         int itemIndex = itemNames.indexOf(nameLikedItem);
         if (itemIndex == -1) {

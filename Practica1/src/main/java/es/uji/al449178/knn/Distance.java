@@ -2,7 +2,6 @@ package es.uji.al449178.knn;
 
 import java.util.List;
 
-//aquí hay que hacer el cálculo de la posición
 public class Distance {
     public static double medir_dist(List<Double> a, List<Double> b){
         double sum = 0;

@@ -1,7 +1,7 @@
 package es.uji.al449178.table;
 
 import java.util.List;
-//terminado
+
 public class Row {
     private List<Double> data;
 

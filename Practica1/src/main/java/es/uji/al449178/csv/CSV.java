@@ -16,8 +16,6 @@ import java.util.List;
 
 public class CSV {
 
-   //con los try catch miramos que la referencia sea buena y que exista tal file
-
     public Table readTable(String fileName) throws IOException {
         String ref;
         BufferedReader br;
@@ -67,7 +65,7 @@ public class CSV {
 
         String line = br.readLine();
         List<String> headers = new ArrayList<>(Arrays.asList(line.split(",")));
-        //Añadida el header extra que perdíamos
+        // separar header extra (label)
         String HeaderExtra= headers.get(headers.size()-1);
         headers.remove(headers.size() - 1);
         TableWithLabels table = new TableWithLabels();
@@ -87,7 +85,6 @@ public class CSV {
         return table;
     }
 
-    //leemos un fichero con una columna de nombres (con cabecera)
     public List<String> readNames(String fileName) throws IOException {
         String ref;
         BufferedReader br;
@@ -103,7 +100,7 @@ public class CSV {
             throw new RuntimeException(e);
         }
 
-        br.readLine(); //saltar cabecera
+        br.readLine();
         List<String> names = new ArrayList<>();
         String line;
         while ((line = br.readLine()) != null) {
