@@ -71,7 +71,8 @@ public class KMeans implements Algorithm<Table, List<Double>, Integer> {
     }
 
 
-    private Row calcCentroide(List<Row> FilasMismoCluster){//sacamos el centroide usando CalcDist para encontrar el punto que esta mas cerca al promedio que calculamos
+    //calculamos el centroide (promedio por coordenada) del grupo
+    private Row calcCentroide(List<Row> FilasMismoCluster){
         int parametros = FilasMismoCluster.get(0).getData().size();
         double[] sumas = new double[parametros];
         for (Row fila : FilasMismoCluster){
@@ -83,18 +84,7 @@ public class KMeans implements Algorithm<Table, List<Double>, Integer> {
         for (double param : sumas){
             CentroCluster.add(param/FilasMismoCluster.size());
         }
-        Row centroide = FilasMismoCluster.get(0);
-        //List<Double> centroide = FilasMismoCluster.get(0).getData();
-        double minDist = calcDist(centroide.getData(), CentroCluster);
-
-        for (Row fila : FilasMismoCluster){
-            double dist = calcDist(fila.getData(), CentroCluster);
-            if (dist<minDist) {
-                minDist=dist;
-                centroide= fila;
-            }
-        }
-        return centroide;
+        return new Row(CentroCluster);
     }
 
 

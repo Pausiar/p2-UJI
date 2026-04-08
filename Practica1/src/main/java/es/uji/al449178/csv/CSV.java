@@ -86,4 +86,30 @@ public class CSV {
         br.close();
         return table;
     }
+
+    //leemos un fichero con una columna de nombres (con cabecera)
+    public List<String> readNames(String fileName) throws IOException {
+        String ref;
+        BufferedReader br;
+        try{
+            ref=getClass().getClassLoader().getResource(fileName).toURI().getPath();
+        } catch (URISyntaxException e){
+            throw new RuntimeException(e);
+        }
+
+        try{
+            br = new BufferedReader(new FileReader(ref));
+        } catch (FileNotFoundException e ){
+            throw new RuntimeException(e);
+        }
+
+        br.readLine(); //saltar cabecera
+        List<String> names = new ArrayList<>();
+        String line;
+        while ((line = br.readLine()) != null) {
+            names.add(line.trim());
+        }
+        br.close();
+        return names;
+    }
 }
