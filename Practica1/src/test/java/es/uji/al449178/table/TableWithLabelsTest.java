@@ -1,6 +1,5 @@
-package es.uji.al449178.table;// TODO: Reemplazar por el nombre de tu paquete
+package es.uji.al449178.table;
 
-// TODO: Reemplazar por los imports de tu proyecto
 
 import es.uji.al449178.table.RowWithLabel;
 import es.uji.al449178.table.TableWithLabels;
@@ -36,7 +35,6 @@ class TableWithLabelsTest {
         // Hay dos opciones para crear las tablas:
         // ---->(1) Añadiendo la cabecera y luego fila a fila con funciones para ello, como "setHeaders" y  "addRow".
         // (2) Inyectando la cabecera y las filas mediante el constructor.
-        // TODO: Descomenta/comenta la opcion que uses/no uses.
 
 
         //---(1) Setter y addRow---

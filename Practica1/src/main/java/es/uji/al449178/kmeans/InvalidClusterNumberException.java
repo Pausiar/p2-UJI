@@ -5,7 +5,7 @@ public class InvalidClusterNumberException  extends Exception {
     private final int numDatos;
 
     public InvalidClusterNumberException(int numClusters, int numDatos){
-        super("Número de Clusters ("+ numClusters+") es mayor al número de datos en la tabla ("+numDatos+")");
+        super("numero de clusters ("+ numClusters+") es mayor que el numero de datos en la tabla ("+numDatos+")");
         this.numClusters = numClusters;
         this.numDatos = numDatos;
     }

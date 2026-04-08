@@ -21,38 +21,41 @@ public class SongRecSys {
     private static final String TEST_NAMES = "recommender/songs_test_names.csv";
 
     public static void main(String[] args) {
-        try {
+        try (Scanner scanner = new Scanner(System.in)) {
             CSV csv = new CSV();
-            Scanner scanner = new Scanner(System.in);
-
-            System.out.println("Selecciona algoritmo: 1) KMeans  2) KNN");
-            int opcion = scanner.nextInt();
-            scanner.nextLine();
-
-            RecSys recSys;
-            if (opcion == 1) {
-                recSys = crearConKMeans(csv);
-            } else {
-                recSys = crearConKNN(csv);
-            }
-
-            Table testData = csv.readTable(TEST_DATA);
-            List<String> testNames = csv.readNames(TEST_NAMES);
-            recSys.initialise(testData, testNames);
-
-            System.out.println("Introduce el nombre de una cancion que te guste:");
-            String cancion = scanner.nextLine();
-
-            List<String> recomendaciones = recSys.recommend(cancion, NUM_RECOMMENDATIONS);
-            System.out.println("Recomendaciones:");
-            for (String rec : recomendaciones) {
-                System.out.println("  - " + rec);
-            }
-            scanner.close();
+            RecSys recSys = crearSistema(csv, scanner);
+            inicializarSistema(csv, recSys);
+            mostrarRecomendaciones(scanner, recSys);
         } catch (LikedItemNotFoundException e) {
             System.out.println("Error: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Error inesperado: " + e.getMessage());
+        }
+    }
+
+    private static RecSys crearSistema(CSV csv, Scanner scanner) throws Exception {
+        System.out.println("Selecciona algoritmo: 1) KMeans  2) KNN");
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+        if (opcion == 1) {
+            return crearConKMeans(csv);
+        }
+        return crearConKNN(csv);
+    }
+
+    private static void inicializarSistema(CSV csv, RecSys recSys) throws Exception {
+        Table testData = csv.readTable(TEST_DATA);
+        List<String> testNames = csv.readNames(TEST_NAMES);
+        recSys.initialise(testData, testNames);
+    }
+
+    private static void mostrarRecomendaciones(Scanner scanner, RecSys recSys) throws LikedItemNotFoundException {
+        System.out.println("Introduce el nombre de una cancion que te guste:");
+        String songName = scanner.nextLine();
+        List<String> recommendations = recSys.recommend(songName, NUM_RECOMMENDATIONS);
+        System.out.println("Recomendaciones:");
+        for (String recommendation : recommendations) {
+            System.out.println("  - " + recommendation);
         }
     }
 

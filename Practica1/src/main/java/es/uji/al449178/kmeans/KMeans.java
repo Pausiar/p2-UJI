@@ -1,5 +1,6 @@
 package es.uji.al449178.kmeans;
 
+import es.uji.al449178.knn.Distance;
 import es.uji.al449178.table.Row;
 import es.uji.al449178.table.Table;
 
@@ -9,8 +10,8 @@ public class KMeans implements Algorithm<Table, List<Double>, Integer> {
     private final int numClusters;
     private final int numIterations;
     private final long seed;
-    private List<Row> representantes = new ArrayList<>();
-    private Map<Integer, List<Row>> clusters = new HashMap<>();
+    private final List<Row> representatives = new ArrayList<>();
+    private final Map<Integer, List<Row>> clusters = new HashMap<>();
 
     public KMeans(int numClusters, int numIterations, long seed){
         this.numClusters=numClusters;
@@ -19,80 +20,89 @@ public class KMeans implements Algorithm<Table, List<Double>, Integer> {
     }
 
     @Override
-    public void train (Table datos) throws InvalidClusterNumberException {
-        if (this.numClusters>datos.getRowCount()){
-            throw new InvalidClusterNumberException(numClusters, datos.getRowCount());
+    public void train (Table data) throws InvalidClusterNumberException {
+        validateClusterCount(data);
+        representatives.clear();
+        initialiseRepresentatives(data);
+
+        for(int iteration = 0; iteration < numIterations; iteration++){
+            resetClusters();
+            assignRowsToClosestCluster(data);
+            updateRepresentatives();
         }
-
-        Random random = new Random(seed);
-        while (representantes.size()< numClusters){
-            Row repre = datos.getRowAt(random.nextInt(datos.getRowCount()));
-            if(!representantes.contains(repre)){
-                representantes.add(repre);
-            }
-        }
-
-        for(int a=0; a<numIterations; a++){
-            for (int i =1; i <= numClusters; i++){
-                clusters.put(i, new ArrayList<>());
-            }
-
-            for (int j=0; j < datos.getRowCount(); j++){
-                Row fila = datos.getRowAt(j);
-                int clusterCercano = estimate(fila.getData());
-                clusters.get(clusterCercano).add(fila);
-            }
-
-            for(int i=0; i < numClusters; i++){
-                List<Row> FilasDelCluster = clusters.get(i+1);
-                if (!FilasDelCluster.isEmpty()){
-
-                    representantes.set(i, calcCentroide(FilasDelCluster));
-                }
-            }
-
-        }
-
     }
 
     @Override
-    public Integer estimate(List<Double> dato){
-        int IndiceRepreCercano = -1;
-        double minDist = Double.MAX_VALUE;
+    public Integer estimate(List<Double> sample){
+        if (representatives.isEmpty()) {
+            throw new IllegalStateException("kmeans must be trained before estimate");
+        }
 
-        for(int i = 0; i < representantes.size(); i++){
-            double dist = calcDist(dato, representantes.get(i).getData());
-            if (dist < minDist){
-                minDist = dist;
-                IndiceRepreCercano=i;
+        int closestRepresentativeIndex = -1;
+        double minDistance = Double.MAX_VALUE;
+
+        for(int index = 0; index < representatives.size(); index++){
+            double distance = Distance.euclideanDistance(sample, representatives.get(index).getData());
+            if (distance < minDistance){
+                minDistance = distance;
+                closestRepresentativeIndex = index;
             }
         }
-        return IndiceRepreCercano +1;
+        return closestRepresentativeIndex + 1;
     }
 
+    private void validateClusterCount(Table data) throws InvalidClusterNumberException {
+        if (numClusters > data.getRowCount()) {
+            throw new InvalidClusterNumberException(numClusters, data.getRowCount());
+        }
+    }
 
-    private Row calcCentroide(List<Row> FilasMismoCluster){
-        int parametros = FilasMismoCluster.get(0).getData().size();
-        double[] sumas = new double[parametros];
-        for (Row fila : FilasMismoCluster){
-            for (int i= 0; i<parametros; i++){
-                sumas[i] += fila.getData().get(i);
+    private void initialiseRepresentatives(Table data) {
+        Random random = new Random(seed);
+        while (representatives.size() < numClusters) {
+            Row representative = data.getRowAt(random.nextInt(data.getRowCount()));
+            if (!representatives.contains(representative)) {
+                representatives.add(representative);
             }
         }
-        List<Double> CentroCluster = new ArrayList<>();
-        for (double param : sumas){
-            CentroCluster.add(param/FilasMismoCluster.size());
-        }
-        return new Row(CentroCluster);
     }
 
-
-    private double calcDist(List<Double> a, List<Double> b){
-        double suma=0;
-        for (int i=0; i< a.size(); i++){
-            double diff = a.get(i) - b.get(i);
-            suma += diff*diff;
+    private void resetClusters() {
+        clusters.clear();
+        for (int clusterId = 1; clusterId <= numClusters; clusterId++) {
+            clusters.put(clusterId, new ArrayList<>());
         }
-        return Math.sqrt(suma);
+    }
+
+    private void assignRowsToClosestCluster(Table data) {
+        for (int rowIndex = 0; rowIndex < data.getRowCount(); rowIndex++) {
+            Row row = data.getRowAt(rowIndex);
+            int closestCluster = estimate(row.getData());
+            clusters.get(closestCluster).add(row);
+        }
+    }
+
+    private void updateRepresentatives() {
+        for (int clusterIndex = 0; clusterIndex < numClusters; clusterIndex++) {
+            List<Row> clusterRows = clusters.get(clusterIndex + 1);
+            if (!clusterRows.isEmpty()) {
+                representatives.set(clusterIndex, calculateCentroid(clusterRows));
+            }
+        }
+    }
+
+    private Row calculateCentroid(List<Row> clusterRows){
+        int dimensions = clusterRows.get(0).getData().size();
+        double[] sums = new double[dimensions];
+        for (Row row : clusterRows){
+            for (int index = 0; index < dimensions; index++){
+                sums[index] += row.getData().get(index);
+            }
+        }
+        List<Double> centroid = new ArrayList<>();
+        for (double sum : sums){
+            centroid.add(sum / clusterRows.size());
+        }
+        return new Row(centroid);
     }
 }

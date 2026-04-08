@@ -1,6 +1,5 @@
-package es.uji.al449178.csv;// TODO: Reemplazar por el nombre de tu paquete
+package es.uji.al449178.csv;
 
-// TODO: Reemplazar por los imports de tu proyecto
 import es.uji.al449178.csv.CSV;
 import es.uji.al449178.table.Table;
 import es.uji.al449178.table.TableWithLabels;
@@ -33,7 +32,6 @@ class CSVTest {
 
     @Test
     @DisplayName("CSV - readTable")
-// TODO: En caso de manejar la excepción en CSV, puedes eliminar la declaración "throws" aquí
     void readTable() throws IOException {
         Table table = csv.readTable(milesFile);
 
@@ -57,7 +55,6 @@ class CSVTest {
 
     @Test
     @DisplayName("CSV - readTableWithLabels")
-// TODO: En caso de manejar la excepción en CSV, puedes eliminar la declaración "throws" aquí
     void readTableWithLabels()  throws IOException {
         TableWithLabels table = csv.readTableWithLabels(irisFile);
 

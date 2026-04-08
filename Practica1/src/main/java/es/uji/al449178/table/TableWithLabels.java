@@ -6,7 +6,8 @@ import java.util.Map;
 public class TableWithLabels extends Table {
 
     private Map<String, Integer> labelsToIndex;
-    private String HeaderExtra;
+    private String extraHeader;
+
     public TableWithLabels() {
         super();
         labelsToIndex = new HashMap<>();
@@ -16,8 +17,9 @@ public class TableWithLabels extends Table {
         super.addRow(row);
         addLabel(row.getLabel());
     }
+
     public void setHeaderExtra(String name){
-        this.HeaderExtra= name;
+        this.extraHeader = name;
     }
 
     private void addLabel(String label) {
@@ -27,7 +29,8 @@ public class TableWithLabels extends Table {
     }
 
     @Override
-    public RowWithLabel getRowAt(int rowNumber) { return (RowWithLabel) rows.get(rowNumber);
+    public RowWithLabel getRowAt(int rowNumber) {
+        return (RowWithLabel) rows.get(rowNumber);
     }
 
     public Integer getLabelAsInteger(String label) {

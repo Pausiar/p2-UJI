@@ -1,6 +1,5 @@
-package es.uji.al449178.knn;// TODO: Reemplazar por el nombre de tu paquete
+package es.uji.al449178.knn;
 
-// TODO: Reemplazar por los imports de tu proyecto
 import es.uji.al449178.csv.CSV;
 import es.uji.al449178.knn.KNN;
 import es.uji.al449178.table.TableWithLabels;
